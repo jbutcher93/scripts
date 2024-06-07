@@ -1,0 +1,17 @@
+env="stage"
+
+if [[ $# -gt 0 ]]; then
+  env="$1"
+fi
+
+session="k9s-${env}"
+window="admin-window"
+
+tmux new-session -d -s $session -n $window
+tmux split-window -h -t $session:$window
+tmux split-window -h -t $session:$window
+tmux send-keys -t $session:$window.2 "tmux select-layout even-horizontal" C-m
+tmux send-keys -t $session:$window.0 "k9s --context $env-us" C-m
+tmux send-keys -t $session:$window.1 "k9s --context $env-eu" C-m
+tmux send-keys -t $session:$window.2 "k9s --context $env-ap" C-m
+tmux switch-client -t $session
