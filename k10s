@@ -1,11 +1,13 @@
 process_contexts() {
-  for CONTEXT in $@; do
-    echo $CONTEXT
+  local index=0
+  for context in $@; do
+    echo $context $index
+    ((index++))
   done
 }
 
 usage() {
-    figlet "k 10 s"
+    figlet -f slant "k10s"
     cat <<EOT
 k10s is a CLI that wraps k9s allowing you to start multiple k9s instances at once.
 
@@ -14,36 +16,41 @@ Usage: k10s [flags]
 Flags:
     -c, --context   List of contexts.
     -h, --help      Help for k10s
+
 EOT
     exit 0
 }
 
-if [ $# -eq 0 ]; then
-    usage
-fi
+main() {
+  if [ $# -eq 0 ]; then
+      usage
+  fi
 
-while [[ $# -gt 0 ]]; do
-  case $1 in 
-  -c | --context ) 
+  while [[ $# -gt 0 ]]; do
+    case $1 in 
+    -c | --context ) 
+      shift
+      contexts=()
+      while [[ "$1" != "" && "$1" != -* ]]; do
+          contexts+=("$1")
+          shift
+      done
+      process_contexts "${contexts[@]}" # Call the function with all contexts
+      ;;
+    -h | --help )
+      shift
+      usage
+      ;;
+    * )
+      shift
+      usage
+      ;;
+    esac
     shift
-    contexts=()
-    while [[ "$1" != "" && "$1" != -* ]]; do
-        contexts+=("$1")
-        shift
-    done
-    process_contexts "${contexts[@]}" # Call the function with all contexts
-    ;;
-  -h | --help )
-    shift
-    usage
-    ;;
-  * )
-    shift
-    usage
-    ;;
-  esac
-  shift
-done
+  done
+}
+
+main $*
 
 #session="k9s-${env}"
 #window="admin-window"
