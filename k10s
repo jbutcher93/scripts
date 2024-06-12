@@ -17,6 +17,10 @@ process_contexts() {
   done
 }
 
+save_contexts() {
+
+}
+
 usage() {
     figlet -f slant "k10s"
     cat <<EOT
@@ -26,6 +30,8 @@ Usage: k10s [flags]
 
 Flags:
     -c, --context   List of contexts to start up
+    -s, --save      List of contexts to save as group
+    -g, --group     Group name of contexts to start up
     -h, --help      Help for k10s
 
 EOT
@@ -46,7 +52,16 @@ main() {
           contexts+=("$1")
           shift
       done
-      process_contexts "${contexts[@]}" # Call the function with all contexts
+      process_contexts "${contexts[@]}"
+      ;;
+    -s, --save ) 
+      shift
+      contexts=()
+      while [[ "$1" != "" && "$1" != -* ]]; do
+          contexts+=("$1")
+          shift
+      done
+      save_contexts "${contexts[@]}"
       ;;
     -h | --help )
       shift
