@@ -31,7 +31,7 @@ save_group() {
 start_group() {
   while read line; do
     local group=$(echo $line | awk -F = '{print $1}')
-    if [[ $group -eq $1 ]]; then
+    if [[ "$group" = "$1" ]]; then
       local contexts=$(echo $line | awk -F = '{for (i=2; i<=NF; i++) printf $i (i<NF ? OFS : ORS)}')
       process_contexts ${contexts[@]}
     fi
