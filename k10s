@@ -2,7 +2,6 @@ k10s_dir=$HOME/.config/k10s
 groups_file=$HOME/.config/k10s/groups
 
 process_contexts() {
-  set -x
   local index=0
   local random=$RANDOM
   local session="session-${random}"
@@ -46,9 +45,9 @@ k10s is a CLI that wraps k9s allowing you to start multiple k9s instances at onc
 Usage: k10s [flags]
 
 Flags:
-    -c, --context   List of contexts to start up
-    -s, --save      List of contexts to save as group
-    -g, --group     Group name of contexts to start up
+    -c, --context   List of contexts to start up (e.g. k10s -c <CONTEXT_NAME> <CONTEXT_NAME> ...)
+    -s, --save      List of contexts to save as group name (e.g. k10s -s <GROUP_NAME>=<CONTEXT_NAME> <CONTEXT_NAME> ...)
+    -g, --group     Group name of contexts to start up (e.g. k10s -g <GROUP_NAME>)
     -h, --help      Help for k10s
 
 EOT
