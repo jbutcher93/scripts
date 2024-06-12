@@ -1,3 +1,6 @@
+k10s_dir=$HOME/.config/k10s
+groups_file=$HOME/.config/k10s/groups
+
 process_contexts() {
   set -x
   local index=0
@@ -17,8 +20,22 @@ process_contexts() {
   done
 }
 
-save_contexts() {
+save_group() {
+  mkdir -p "$k10s_dir"
+  touch "$groups_file"
+  local group=$(echo $@ | awk -F [=,' '] '{print $1}')
+  local contexts=$(echo $@ | awk -F [=,' '] '{for (i=2; i<=NF; i++) printf $i (i<NF ? OFS : ORS)}')
+  echo "$group"="$contexts" >> "$groups_file"
+}
 
+start_group() {
+  while read line; do
+    local group=$(echo $line | awk -F = '{print $1}')
+    if [[ $group -eq $1 ]]; then
+      local contexts=$(echo $line | awk -F = '{for (i=2; i<=NF; i++) printf $i (i<NF ? OFS : ORS)}')
+      process_contexts ${contexts[@]}
+    fi
+  done < $groups_file
 }
 
 usage() {
@@ -54,14 +71,18 @@ main() {
       done
       process_contexts "${contexts[@]}"
       ;;
-    -s, --save ) 
+    -s | --save ) 
       shift
       contexts=()
       while [[ "$1" != "" && "$1" != -* ]]; do
           contexts+=("$1")
           shift
       done
-      save_contexts "${contexts[@]}"
+      save_group "${contexts[@]}"
+      ;;
+    -g | --group )
+      shift
+      start_group $1
       ;;
     -h | --help )
       shift
