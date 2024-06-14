@@ -6,7 +6,7 @@ groups_file=$HOME/.config/k10s/groups
 process_contexts() {
   local index=0
   local random=$RANDOM
-  local session="session-${random}"
+  local session="session-$random"
   local split_times=$(($#-1))
   tmux new-session -d -s "$session" \; switch-client -t "$session"
 
@@ -44,7 +44,7 @@ start_group() {
     local group=$(echo "$line" | awk -F = '{print $1}')
     if [[ "$group" = "$1" ]]; then
       local contexts=$(echo "$line" | awk -F = '{for (i=2; i<=NF; i++) printf $i (i<NF ? OFS : ORS)}')
-      process_contexts "${contexts[@]}"
+      process_contexts ${contexts[@]}
     fi
   done < "$groups_file"
 }
@@ -80,7 +80,7 @@ main() {
           contexts+=("$1")
           shift
       done
-      process_contexts "${contexts[@]}"
+      process_contexts ${contexts[@]}
       ;;
     -s | --save ) 
       shift
@@ -89,7 +89,7 @@ main() {
           contexts+=("$1")
           shift
       done
-      save_group "${contexts[@]}"
+      save_group ${contexts[@]}
       ;;
     -g | --group )
       shift
