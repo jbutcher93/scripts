@@ -8,15 +8,15 @@ process_contexts() {
   local random=$RANDOM
   local session="session-${random}"
   local split_times=$(($#-1))
-  tmux new-session -d -s $session \; switch-client -t $session
+  tmux new-session -d -s "$session" \; switch-client -t "$session"
 
-  while [[ $split_times -gt 0 ]] ; do
-    tmux split-window -h -t $session
+  while [[ "$split_times" -gt 0 ]] ; do
+    tmux split-window -h -t "$session"
     ((split_times--))
   done
-    tmux send-keys -t $session:0.0 "tmux select-layout even-horizontal" C-m
+    tmux send-keys -t "$session:0.0" "tmux select-layout even-horizontal" C-m
   for context in $@; do
-    tmux send-keys -t $session:0.$index "k9s --context $context" C-m
+    tmux send-keys -t "$session:0.$index" "k9s --context $context" C-m
     ((index++))
   done
 }
@@ -26,14 +26,14 @@ save_group() {
   touch "$groups_file"
   local group=$(echo $@ | awk -F [=,' '] '{print $1}')
   local contexts=$(echo $@ | awk -F [=,' '] '{for (i=2; i<=NF; i++) printf $i (i<NF ? OFS : ORS)}')
-  update_group $group
+  update_group "$group"
   echo "$group"="$contexts" >> "$groups_file"
 }
 
 update_group() {
   while read line; do
-    local group=$(echo $line | awk -F [=,' '] '{print $1}')
-    if [[ $1 = $group ]]; then
+    local group=$(echo "$line" | awk -F [=,' '] '{print $1}')
+    if [[ "$1" = "$group" ]]; then
       sed -i "/$line/d" "$groups_file"
     fi
   done < "$groups_file"
@@ -41,12 +41,12 @@ update_group() {
 
 start_group() {
   while read line; do
-    local group=$(echo $line | awk -F = '{print $1}')
+    local group=$(echo "$line" | awk -F = '{print $1}')
     if [[ "$group" = "$1" ]]; then
-      local contexts=$(echo $line | awk -F = '{for (i=2; i<=NF; i++) printf $i (i<NF ? OFS : ORS)}')
-      process_contexts ${contexts[@]}
+      local contexts=$(echo "$line" | awk -F = '{for (i=2; i<=NF; i++) printf $i (i<NF ? OFS : ORS)}')
+      process_contexts "${contexts[@]}"
     fi
-  done < $groups_file
+  done < "$groups_file"
 }
 
 usage() {
@@ -67,12 +67,12 @@ EOT
 }
 
 main() {
-  if [ $# -eq 0 ]; then
+  if [ "$#" -eq 0 ]; then
       usage
   fi
 
-  while [[ $# -gt 0 ]]; do
-    case $1 in 
+  while [[ "$#" -gt 0 ]]; do
+    case "$1" in 
     -c | --context ) 
       shift
       contexts=()
@@ -93,7 +93,7 @@ main() {
       ;;
     -g | --group )
       shift
-      start_group $1
+      start_group "$1"
       ;;
     -h | --help )
       shift
