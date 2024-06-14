@@ -24,7 +24,17 @@ save_group() {
   touch "$groups_file"
   local group=$(echo $@ | awk -F [=,' '] '{print $1}')
   local contexts=$(echo $@ | awk -F [=,' '] '{for (i=2; i<=NF; i++) printf $i (i<NF ? OFS : ORS)}')
+  update_group $group
   echo "$group"="$contexts" >> "$groups_file"
+}
+
+update_group() {
+  while read line; do
+    local group=$(echo $line | awk -F [=,' '] '{print $1}')
+    if [[ $1 = $group ]]; then
+      sed -i "/$line/d" "$groups_file"
+    fi
+  done < "$groups_file"
 }
 
 start_group() {
@@ -40,13 +50,13 @@ start_group() {
 usage() {
     figlet -f slant "k10s"
     cat <<EOT
-k10s is a CLI that wraps k9s allowing you to start multiple k9s instances at once.
+k10s is a CLI that enables starting multiple k9s instances at once.
 
 Usage: k10s [flags]
 
 Flags:
     -c, --context   List of contexts to start up (e.g. k10s -c <CONTEXT_NAME> <CONTEXT_NAME> ...)
-    -s, --save      List of contexts to save as group name (e.g. k10s -s <GROUP_NAME>=<CONTEXT_NAME> <CONTEXT_NAME> ...)
+    -s, --save      List of contexts to save/overwrite as a group name (e.g. k10s -s <GROUP_NAME>=<CONTEXT_NAME> <CONTEXT_NAME> ...)
     -g, --group     Group name of contexts to start up (e.g. k10s -g <GROUP_NAME>)
     -h, --help      Help for k10s
 
