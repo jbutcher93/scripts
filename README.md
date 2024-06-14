@@ -6,7 +6,7 @@ This directory is used for personal scripts
 
 ```bash
 // download the repository
-$ git clone https://github.com/jbutcher93/scipts
+$ git clone https://github.com/jbutcher93/scripts
 
 // add directory to your path (add to .bashrc or .zshrc)
 $ export PATH=$HOME/scripts:$PATH
