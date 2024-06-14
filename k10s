@@ -34,7 +34,7 @@ update_group() {
   while read line; do
     local group=$(echo "$line" | awk -F [=,' '] '{print $1}')
     if [[ "$1" = "$group" ]]; then
-      sed -i "/$line/d" "$groups_file"
+      sed -i '' "/$line/d" "$groups_file"
     fi
   done < "$groups_file"
 }
