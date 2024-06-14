@@ -106,4 +106,4 @@ main() {
   done
 }
 
-main $*
+main $@
