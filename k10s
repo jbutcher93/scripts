@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
-k10s_dir=$HOME/.config/k10s
-groups_file=$HOME/.config/k10s/groups
+k10s_dir="$HOME/.config/k10s"
+groups_file="$k10s_dir/groups"
 
 process_contexts() {
   local index=0
