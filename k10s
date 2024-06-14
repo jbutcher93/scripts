@@ -1,3 +1,5 @@
+#! /usr/bin/env bash
+
 k10s_dir=$HOME/.config/k10s
 groups_file=$HOME/.config/k10s/groups
 
