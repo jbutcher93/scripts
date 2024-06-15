@@ -1,4 +1,3 @@
-#! /usr/bin/env bash
 
 k10s_dir="$HOME/.config/k10s"
 groups_file="$k10s_dir/groups"
@@ -23,7 +22,7 @@ process_contexts() {
 
 save_group() {
   mkdir -p "$k10s_dir"
-  touch "$groups_file"
+  touch -- "$groups_file"
   local group=$(echo $@ | awk -F [=,' '] '{print $1}')
   local contexts=$(echo $@ | awk -F [=,' '] '{for (i=2; i<=NF; i++) printf $i (i<NF ? OFS : ORS)}')
   update_group "$group"
@@ -35,9 +34,9 @@ update_group() {
     local group=$(echo "$line" | awk -F [=,' '] '{print $1}')
     if [[ "$1" = "$group" ]]; then
       if [[ "$OSTYPE" = "darwin"* ]]; then
-        sed -i '' "/$line/d" "$groups_file"
+        sed -i '' "/^$line/d" -- "$groups_file"
       else
-        sed -i'' "/$line/d" "$groups_file"
+        sed -i'' "/^$line/d" -- "$groups_file"
       fi
     fi
   done < "$groups_file"
@@ -71,7 +70,7 @@ EOT
 }
 
 main() {
-  if [ "$#" -eq 0 ]; then
+  if [[ "$#" -eq 0 ]]; then
       usage
   fi
 
