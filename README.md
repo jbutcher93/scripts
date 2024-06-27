@@ -12,5 +12,5 @@ $ git clone https://github.com/jbutcher93/scripts
 $ export PATH=$HOME/scripts:$PATH
 
 // give yourself permission to execute any desired script
-$ chmod +x [SCRIPT]
+$ chmod +x <filename>
 ```
