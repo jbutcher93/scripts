@@ -34,7 +34,7 @@ update_group() {
     local group=$(echo "$line" | awk -F [=,' '] '{print $1}')
     if [[ "$1" = "$group" ]]; then
       if [[ "$OSTYPE" = "darwin"* ]]; then
-        sed -i '' "/^$line/d" -- "$groups_file"
+        sed -i '' "/^$line/d" "$groups_file"
       else
         sed -i'' "/^$line/d" -- "$groups_file"
       fi
