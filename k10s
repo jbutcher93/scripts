@@ -53,6 +53,10 @@ start_group() {
   done < "$groups_file"
 }
 
+read_groups() {
+  cat "$groups_file"
+}
+
 usage() {
     figlet -f slant "k10s"
     cat <<EOT
@@ -64,6 +68,7 @@ Flags:
     -c, --context   List of contexts to start up (e.g. k10s -c <CONTEXT_NAME> <CONTEXT_NAME> ...)
     -s, --save      List of contexts to save/overwrite as a group name (e.g. k10s -s <GROUP_NAME>=<CONTEXT_NAME> <CONTEXT_NAME> ...)
     -g, --group     Group name of contexts to start up (e.g. k10s -g <GROUP_NAME>)
+    -r, --read      Read out the saved groups and their contexts
     -h, --help      Help for k10s
 
 EOT
@@ -94,6 +99,9 @@ main() {
           shift
       done
       save_group ${contexts[@]}
+      ;;
+    -r | --read )
+      read_groups
       ;;
     -g | --group )
       shift
