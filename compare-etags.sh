@@ -14,12 +14,9 @@ debug() {
   set -x # enable debugging
 }
 
-usage() {
+compare_etags() {
   profile1_buckets=$(aws s3 ls --profile "$profile1" | grep s3-binaries-* | grep -v "^.*log.*" | awk '{print $3}')
   profile2_buckets=$(aws s3 ls --profile "$profile2" | grep s3-binaries-* | grep -v "^.*log.*" | awk '{print $3}')
-
-  echo $profile1_buckets
-  echo $profile2_buckets
 
   for bucket1 in $profile1_buckets; do
       bootstrap_list=$(aws s3 ls --recursive s3://"$bucket1" --profile $profile1 | grep bootstrap.zip | awk '{print $4}')
@@ -56,7 +53,7 @@ EOT
 
 main() {
   if [[ "$#" -eq 0 ]]; then
-      usage
+      compare_etags
   fi
   while [[ "$#" -gt 0 ]]; do
     case "$1" in 
@@ -72,7 +69,7 @@ main() {
     esac
     shift
   done
-  usage
+  compare_etags
 }
 
 main $@
