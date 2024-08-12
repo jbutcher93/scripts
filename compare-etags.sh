@@ -38,6 +38,22 @@ usage() {
   done
 }
 
+help() {
+    cat <<EOT
+
+A script to help compare etags on bootstrap.zip files in AWS s3 buckets between two profiles
+
+Usage: ./compare-etags.sh [flags]
+
+Flags:
+    -a, --auth      Authenticate with SSO on given profiles
+    -d, --debug     Enable debugging
+    -h, --help      Help for script
+
+EOT
+    exit 0
+}
+
 main() {
   if [[ "$#" -eq 0 ]]; then
       usage
@@ -49,6 +65,9 @@ main() {
       ;;
     -d | --debug ) 
       debug
+      ;;
+    -h | --help ) 
+      help
       ;;
     esac
     shift
