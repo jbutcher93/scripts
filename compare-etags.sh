@@ -64,9 +64,6 @@ EOT
 }
 
 main() {
-  if [[ "$#" -eq 0 ]]; then
-      compare_etags
-  fi
   while [[ "$#" -gt 0 ]]; do
     case "$1" in 
     -a | --auth ) 
