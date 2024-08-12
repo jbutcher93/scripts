@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 profile1=lightyear-shared-qa
 profile2=lightyear-shared-stage
 
@@ -37,6 +39,8 @@ debug() {
 
 compare_etags() {
   date1=$(date)
+
+  echo -e "Comparing etags...\n"
 
   profile1_bucket=$(aws s3 ls --profile "$profile1" | grep s3-binaries-.*-us-east-1 | grep -v "^.*log.*" | awk '{print $3}')
   profile2_bucket=$(aws s3 ls --profile "$profile2" | grep s3-binaries-.*-us-east-1 | grep -v "^.*log.*" | awk '{print $3}')
