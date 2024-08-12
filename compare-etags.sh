@@ -3,6 +3,27 @@ profile2=lightyear-shared-stage
 
 set +x # disable debugging
 
+time_elapsed() {
+  date1=$1
+  date2=$(date)
+
+  os_arch=$(uname -s)
+  if [[ "$os_arch" = "Darwin" ]]; then
+    timestamp1=$(date -j -f "%a %b %d %H:%M:%S %Z %Y" "$date1" "+%s")
+    timestamp2=$(date -j -f "%a %b %d %H:%M:%S %Z %Y" "$date2" "+%s")
+  else
+    timestamp1=$(date -d "$date1" +%s)
+    timestamp2=$(date -d "$date2" +%s)
+  fi
+
+  diff=$((timestamp2 - timestamp1))
+  hours=$((diff / 3600))
+  minutes=$(( (diff % 3600) / 60 ))
+  seconds=$((diff % 60))
+
+  echo "Time elapsed: $hours hours, $minutes minutes, $seconds seconds"
+}
+
 auth() {
   echo "Authenticating with SSO"
   aws sso login --profile "$profile1"
@@ -15,7 +36,8 @@ debug() {
 }
 
 compare_etags() {
-  date
+  date1=$(date)
+
   profile1_bucket=$(aws s3 ls --profile "$profile1" | grep s3-binaries-.*-us-east-1 | grep -v "^.*log.*" | awk '{print $3}')
   profile2_bucket=$(aws s3 ls --profile "$profile2" | grep s3-binaries-.*-us-east-1 | grep -v "^.*log.*" | awk '{print $3}')
 
@@ -43,8 +65,10 @@ compare_etags() {
       echo "An error occurred while fetching ETags"
     fi
   done
+
+  time_elapsed "$date1"
+
   rm etag1 etag2
-  date
 }
 
 help() {
